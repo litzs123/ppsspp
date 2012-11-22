@@ -246,10 +246,14 @@ Module *__KernelLoadELFFromPtr(const u8 *ptr, u32 loadAddress, std::string *erro
 
 	SectionID sceModuleInfoSection = reader.GetSectionByName(".rodata.sceModuleInfo");
 	PspModuleInfo *modinfo;
+	u32 modinfoBase = 0;
 	if (sceModuleInfoSection != -1)
 		modinfo = (PspModuleInfo *)Memory::GetPointer(reader.GetSectionAddr(sceModuleInfoSection));
 	else
+	{
 		modinfo = (PspModuleInfo *)Memory::GetPointer(reader.GetVaddr() + (reader.GetSegmentPaddr(0) & 0x7FFFFFFF) - reader.GetSegmentOffset(0));
+		modinfoBase = reader.GetVaddr();
+	}
 
 	// Check for module blacklist - we don't allow games to load these modules from disc
 	// as we have HLE implementations and the originals won't run in the emu because they
@@ -291,7 +295,7 @@ Module *__KernelLoadELFFromPtr(const u8 *ptr, u32 loadAddress, std::string *erro
 		}
 	}
 
-	module->nm.gp_value = modinfo->gp;
+	module->nm.gp_value = modinfoBase + modinfo->gp;
 	strncpy(module->nm.name, modinfo->name, 28);
 
 	INFO_LOG(LOADER,"Module %s: %08x %08x %08x", modinfo->name, modinfo->gp, modinfo->libent,modinfo->libstub);
@@ -322,22 +326,22 @@ Module *__KernelLoadELFFromPtr(const u8 *ptr, u32 loadAddress, std::string *erro
 	DEBUG_LOG(LOADER,"Num Modules: %i",numModules);
 	DEBUG_LOG(LOADER,"===================================================");
 
-	PspLibStubEntry *entry = (PspLibStubEntry *)Memory::GetPointer(modinfo->libstub);
+	PspLibStubEntry *entry = (PspLibStubEntry *)Memory::GetPointer(modinfo->libstub + modinfoBase);
 	if (entry == 0)
 		numModules = 0;
 
 	int numSyms=0;
 	for (int m = 0; m < numModules; m++)
 	{
-		const char *modulename = (const char*)Memory::GetPointer(entry[m].name);
-		u32 *nidDataPtr = (u32*)Memory::GetPointer(entry[m].nidData);
-		// u32 *stubs = (u32*)Memory::GetPointer(entry[m].firstSymAddr);
+		const char *modulename = (const char*)Memory::GetPointer(entry[m].name + modinfoBase);
+		u32 *nidDataPtr = (u32*)Memory::GetPointer(entry[m].nidData + modinfoBase);
+		// u32 *stubs = (u32*)Memory::GetPointer(entry[m].firstSymAddr + modinfoBase);
 
-		DEBUG_LOG(LOADER,"Importing Module %s, stubs at %08x",modulename,entry[m].firstSymAddr);
+		DEBUG_LOG(LOADER,"Importing Module %s, stubs at %08x",modulename,entry[m].firstSymAddr + modinfoBase);
 
 		for (int i=0; i<entry[m].numFuncs; i++)
 		{
-			u32 addrToWriteSyscall = entry[m].firstSymAddr+i*8;
+			u32 addrToWriteSyscall = entry[m].firstSymAddr+i*8 + modinfoBase;
 			DEBUG_LOG(LOADER,"%s : %08x",GetFuncName(modulename, nidDataPtr[i]), addrToWriteSyscall);
 			//write a syscall here
 			WriteSyscall(modulename, nidDataPtr[i], addrToWriteSyscall);
@@ -366,7 +370,7 @@ Module *__KernelLoadELFFromPtr(const u8 *ptr, u32 loadAddress, std::string *erro
 	};
 
 	int numEnts = (modinfo->libentend - modinfo->libent)/sizeof(PspLibEntEntry);
-	PspLibEntEntry *ent = (PspLibEntEntry *)Memory::GetPointer(modinfo->libent);
+	PspLibEntEntry *ent = (PspLibEntEntry *)Memory::GetPointer(modinfo->libent + modinfoBase);
 	if (ent == 0)
 		numEnts = 0;
 
@@ -385,12 +389,12 @@ Module *__KernelLoadELFFromPtr(const u8 *ptr, u32 loadAddress, std::string *erro
 		}
 		else
 		{
-			name = (const char*)Memory::GetPointer(ent->name);
+			name = (const char*)Memory::GetPointer(ent->name + modinfoBase);
 		}
 
-		INFO_LOG(HLE,"Exporting ent %d named %s, %d funcs, %d vars, resident %08x", m, name, ent->fcount, ent->vcount, ent->resident);
+		INFO_LOG(HLE,"Exporting ent %d named %s, %d funcs, %d vars, resident %08x", m, name, ent->fcount, ent->vcount, ent->resident + modinfoBase);
 		
-		u32 *residentPtr = (u32*)Memory::GetPointer(ent->resident);
+		u32 *residentPtr = (u32*)Memory::GetPointer(ent->resident + modinfoBase);
 
 		for (u32 j = 0; j < ent->fcount; j++)
 		{
