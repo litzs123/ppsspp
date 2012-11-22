@@ -323,6 +323,8 @@ Module *__KernelLoadELFFromPtr(const u8 *ptr, u32 loadAddress, std::string *erro
 	DEBUG_LOG(LOADER,"===================================================");
 
 	PspLibStubEntry *entry = (PspLibStubEntry *)Memory::GetPointer(modinfo->libstub);
+	if (entry == 0)
+		numModules = 0;
 
 	int numSyms=0;
 	for (int m = 0; m < numModules; m++)
@@ -365,6 +367,9 @@ Module *__KernelLoadELFFromPtr(const u8 *ptr, u32 loadAddress, std::string *erro
 
 	int numEnts = (modinfo->libentend - modinfo->libent)/sizeof(PspLibEntEntry);
 	PspLibEntEntry *ent = (PspLibEntEntry *)Memory::GetPointer(modinfo->libent);
+	if (ent == 0)
+		numEnts = 0;
+
 	for (int m=0; m<numEnts; m++)
 	{
 		const char *name;
