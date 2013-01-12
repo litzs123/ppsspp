@@ -375,6 +375,12 @@ u32 scePowerGetCpuClockFrequencyInt() {
 	return cpuFreq;
 }
 
+float scePowerGetCpuClockFrequencyFloat() {
+	int cpuFreq = CoreTiming::GetClockFrequencyMHz();
+	INFO_LOG(HLE, "%f=scePowerGetCpuClockFrequencyFloat()", (float)cpuFreq);
+	return (float) cpuFreq;
+}
+
 u32 scePowerGetPllClockFrequencyInt() {
 	INFO_LOG(HLE,"%i=scePowerGetPllClockFrequencyInt()", pllFreq);
 	return pllFreq;
@@ -383,12 +389,6 @@ u32 scePowerGetPllClockFrequencyInt() {
 u32 scePowerGetBusClockFrequencyInt() {
 	INFO_LOG(HLE,"%i=scePowerGetBusClockFrequencyInt()", busFreq);
 	return busFreq;
-}
-
-float scePowerGetCpuClockFrequencyFloat() {
-	int cpuFreq = CoreTiming::GetClockFrequencyMHz(); 
-	INFO_LOG(HLE, "%f=scePowerGetCpuClockFrequencyFloat()", (float)cpuFreq);
-	return (float) cpuFreq;
 }
 
 float scePowerGetPllClockFrequencyFloat() {
