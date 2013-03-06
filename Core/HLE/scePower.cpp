@@ -48,6 +48,9 @@ const int POWER_CB_AUTO = -1;
 const int numberOfCBPowerSlots = 16;
 const int numberOfCBPowerSlotsPrivate = 32;
 
+// >= 0.4344422699
+static const double CPU_FREQ_MULTIPLIER = 0.4344422700;
+
 static bool volatileMemLocked;
 static int powerCbSlots[numberOfCBPowerSlots];
 static std::vector<VolatileWaitingThread> volatileWaitingThreads;
@@ -383,16 +386,27 @@ u32 scePowerSetBusClockFrequency(u32 busfreq) {
 	return 0;
 }
 
+double __PowerGetCpuClockFrequency() {
+	// TODO: Maybe this is the actual frequency it uses?  Use a u64 instead...
+	double maxfreq = (float) CoreTiming::GetClockFrequencyMHz();
+	if (maxfreq == 222.0)
+		return maxfreq;
+	double freq = CPU_FREQ_MULTIPLIER * 2.0f * maxfreq;
+	while (freq + CPU_FREQ_MULTIPLIER < maxfreq)
+		freq = freq + CPU_FREQ_MULTIPLIER;
+	return freq;
+}
+
 u32 scePowerGetCpuClockFrequencyInt() {
-	int cpuFreq = CoreTiming::GetClockFrequencyMHz();
-	DEBUG_LOG(HLE,"%i=scePowerGetCpuClockFrequencyInt()", cpuFreq);
-	return cpuFreq;
+	int freq = (int) __PowerGetCpuClockFrequency();
+	DEBUG_LOG(HLE,"%i=scePowerGetCpuClockFrequencyInt()", freq);
+	return freq;
 }
 
 float scePowerGetCpuClockFrequencyFloat() {
-	int cpuFreq = CoreTiming::GetClockFrequencyMHz();
-	INFO_LOG(HLE, "%f=scePowerGetCpuClockFrequencyFloat()", (float)cpuFreq);
-	return (float) cpuFreq;
+	float freq = (float) __PowerGetCpuClockFrequency();
+	INFO_LOG(HLE, "%f=scePowerGetCpuClockFrequencyFloat()", freq);
+	return freq;
 }
 
 u32 scePowerGetPllClockFrequencyInt() {
