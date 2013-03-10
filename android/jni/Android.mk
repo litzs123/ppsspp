@@ -199,4 +199,5 @@ $(call import-module,libzip)
 $(call import-module,native)
 
 jni/$(SRC)/git-version.cpp:
-	./git-version-gen.sh
+	-./git-version-gen.sh
+	-..\Windows\git-version-gen.cmd
