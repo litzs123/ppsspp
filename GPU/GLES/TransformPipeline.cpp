@@ -1190,13 +1190,8 @@ void TransformDrawEngine::DoFlush() {
 							DecodeVerts();
 							goto rotateVBO;
 						}
-						if (vai->numVerts > 100) {
-							// exponential backoff up to 16 draws, then every 24
-							vai->drawsUntilNextFullHash = std::min(24, vai->numFrames);
-						} else {
-							// Lower numbers seem much more likely to change.
-							vai->drawsUntilNextFullHash = 0;
-						}
+						// exponential backoff up to 16 draws, then every 24
+						vai->drawsUntilNextFullHash = std::min(24, vai->numFrames);
 						// TODO: tweak
 						//if (vai->numFrames > 1000) {
 						//	vai->status = VertexArrayInfo::VAI_RELIABLE;
