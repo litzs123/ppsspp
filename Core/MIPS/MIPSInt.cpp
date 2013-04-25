@@ -179,7 +179,7 @@ namespace MIPSInt
 		case 6:
 			// Not required for MIPS compliance, but often used.  Not even allowed for Icache.
 			// Spammy.
-			//DEBUG_LOG(CPU, "Dcache write instruction %08x", addr);
+			VERBOSE_LOG(CPU, "Dcache write instruction %08x", addr);
 			gpu->InvalidateCache(addr, 0x40);
 			break;
 

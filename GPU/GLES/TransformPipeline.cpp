@@ -1106,6 +1106,16 @@ void TransformDrawEngine::DecimateTrackedVertexArrays() {
 #endif
 }
 
+void TransformDrawEngine::InvalidateTrackedVertexArrays(u32 addr, int size) {
+	// Currently the address is ignored, all arrays are marked as needing rehash.
+	// This could potentially be slow.
+	for (auto iter = vai_.begin(); iter != vai_.end(); ++iter) {
+		iter->second->drawsUntilNextFullHash = 0;
+		if (iter->second->status == VertexArrayInfo::VAI_RELIABLE)
+			iter->second->status = VertexArrayInfo::VAI_HASHING;
+	}
+}
+
 VertexArrayInfo::~VertexArrayInfo() {
 	if (vbo)
 		glDeleteBuffers(1, &vbo);

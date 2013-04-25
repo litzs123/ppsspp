@@ -115,6 +115,7 @@ public:
 
 	void DecimateTrackedVertexArrays();
 	void ClearTrackedVertexArrays();
+	void InvalidateTrackedVertexArrays(u32 addr, int size);
 
 	void SetupVertexDecoder(u32 vertType);
 
