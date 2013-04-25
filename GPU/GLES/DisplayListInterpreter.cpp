@@ -939,6 +939,7 @@ void GLES_GPU::InvalidateCache(u32 addr, int size) {
 		textureCache_.Invalidate(addr, size, true);
 	else
 		textureCache_.InvalidateAll(true);
+	transformDraw_.InvalidateTrackedVertexArrays(addr, size);
 }
 
 void GLES_GPU::InvalidateCacheHint(u32 addr, int size) {
