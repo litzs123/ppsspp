@@ -72,6 +72,8 @@ public:
 	};
 
 	u32 hash;
+	u32 lowAddr;
+	u32 highAddr;
 
 	Status status;
 
@@ -152,6 +154,8 @@ private:
 		u16 vertexCount;
 		u16 indexLowerBound;
 		u16 indexUpperBound;
+		u32 lowAddr;
+		u32 highAddr;
 	};
 
 	// Vertex collector state
