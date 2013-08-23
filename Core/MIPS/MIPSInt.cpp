@@ -32,6 +32,9 @@
 #include "../HLE/HLE.h"
 #include "../System.h"
 
+#include "../../GPU/GPUInterface.h"
+#include "../../GPU/GPUState.h"
+
 #define R(i) (currentMIPS->r[i])
 #define F(i) (currentMIPS->f[i])
 #define FI(i) (currentMIPS->fi[i])
@@ -122,24 +125,68 @@ namespace MIPSInt
 		int imm = (s16)(op & 0xFFFF);
 		int rs = _RS;
 		int addr = R(rs) + imm;
-		int func = (op >> 16) & 0x1F;
+		int loc = (op >> 16) & 0x3;
+		int oper = (op >> 18) & 0x7;
 
-		// It appears that a cache line is 0x40 (64) bytes.
-		switch (func) {
-		case 24:
-			// "Create Dirty Exclusive" - for avoiding a cacheline fill before writing to it.
-			// Will cause garbage on the real machine so we just ignore it, the app will overwrite the cacheline.
-			break;
-		case 25:  // Hit Invalidate - zaps the line if present in cache. Should not writeback???? scary.
-			// No need to do anything.
-			break;
-		case 27:  // D-cube. Hit Writeback Invalidate.
-			break;
-		case 30:  // GTA LCS, a lot. Fill (prefetch).
+		// Some games use loc = 3 (secondary cache), not sure what this is?  Might be GPU cache specifically?
+
+		switch (oper)
+		{
+		case 0:
+			// Required for MIPS compliance.
+			if (loc == 0) {
+				WARN_LOG(CPU, "Icache invalidate by index instruction %08x", addr);
+			} else {
+				WARN_LOG(CPU, "Dcache write invalidate by index instruction %08x", addr);
+			}
 			break;
 
-		default:
-			DEBUG_LOG(CPU,"cache instruction affecting %08x : function %i", addr, func);
+		case 1:
+			// Recommended for MIPS compliance.
+			WARN_LOG(CPU, "cache %d load tag instruction %08x", loc, addr);
+			break;
+
+		case 2:
+			// Required for MIPS compliance.
+			WARN_LOG(CPU, "cache %d store tag instruction %08x", loc, addr);
+			break;
+
+		case 3:
+			WARN_LOG(CPU, "cache %d UNKNOWN instruction %08x", loc, addr);
+			break;
+
+		case 4:
+			// TODO: Clear jit cache?  Doesn't writeback, scary.  Not required impl for Dcache per MIPS.
+			if (loc == 0) {
+				WARN_LOG(CPU, "Icache invalidate instruction %08x", addr);
+			} else {
+				WARN_LOG(CPU, "scary Dcache reset instruction %08x", addr);
+				gpu->InvalidateCache(addr, 0x40);
+			}
+			break;
+
+		case 5:
+			if (loc == 0) {
+				// Not required for MIPS.
+				DEBUG_LOG(CPU, "Icache preload instruction %08x", addr);
+			} else {
+				// Required for MIPS compliance.
+				DEBUG_LOG(CPU, "Dcache write invalidate instruction %08x", addr);
+				gpu->InvalidateCache(addr, 0x40);
+			}
+			break;
+
+		case 6:
+			// Not required for MIPS compliance, but often used.  Not even allowed for Icache.
+			// Spammy.
+			VERBOSE_LOG(CPU, "Dcache write instruction %08x", addr);
+			gpu->InvalidateCache(addr, 0x40);
+			break;
+
+		case 7:
+			// Not required for MIPS compliance.
+			WARN_LOG(CPU, "cache lock instruction %08x", addr);
+			break;
 		}
 
 		PC += 4;

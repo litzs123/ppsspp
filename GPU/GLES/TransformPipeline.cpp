@@ -853,7 +853,13 @@ void TransformDrawEngine::SubmitPrim(void *verts, void *inds, int prim, int vert
 	dc.indexType = ((forceIndexType == -1) ? (vertType & GE_VTYPE_IDX_MASK) : forceIndexType) >> GE_VTYPE_IDX_SHIFT;
 	dc.prim = prim;
 	dc.vertexCount = vertexCount;
+	dc.lowAddr = gstate_c.vertexAddr;
+	dc.highAddr = gstate_c.vertexAddr + *bytesRead;
 	if (inds) {
+		if (gstate_c.indexAddr < dc.lowAddr)
+			dc.lowAddr = gstate_c.indexAddr;
+		if (gstate_c.indexAddr + 2 * vertexCount > dc.highAddr)
+			dc.highAddr = 2 * vertexCount;
 		GetIndexBounds(inds, vertexCount, vertType, &dc.indexLowerBound, &dc.indexUpperBound);
 	} else {
 		dc.indexLowerBound = 0;
@@ -1015,6 +1021,19 @@ void TransformDrawEngine::DecimateTrackedVertexArrays() {
 #endif
 }
 
+void TransformDrawEngine::InvalidateTrackedVertexArrays(u32 addr, int size) {
+	// Currently the address is ignored, all arrays are marked as needing rehash.
+	// This could potentially be slow.
+	for (auto iter = vai_.begin(); iter != vai_.end(); ++iter) {
+		if (addr < iter->second->lowAddr || addr + size > iter->second->highAddr) {
+			continue;
+		}
+		iter->second->drawsUntilNextFullHash = 0;
+		if (iter->second->status == VertexArrayInfo::VAI_RELIABLE)
+			iter->second->status = VertexArrayInfo::VAI_HASHING;
+	}
+}
+
 VertexArrayInfo::~VertexArrayInfo() {
 	if (vbo)
 		glDeleteBuffers(1, &vbo);
@@ -1060,6 +1079,14 @@ void TransformDrawEngine::DoFlush() {
 					vai->hash = dataHash;
 					vai->status = VertexArrayInfo::VAI_HASHING;
 					vai->drawsUntilNextFullHash = 0;
+					vai->lowAddr = 0xFFFFFFFF;
+					vai->highAddr = 0;
+					for (int i = 0; i < numDrawCalls; i++) {
+						if (vai->lowAddr > drawCalls[i].lowAddr)
+							vai->lowAddr = drawCalls[i].lowAddr;
+						if (vai->highAddr < drawCalls[i].highAddr)
+							vai->highAddr = drawCalls[i].highAddr;
+					}
 					DecodeVerts(); // writes to indexGen
 					vai->numVerts = indexGen.VertexCount();
 					vai->prim = indexGen.Prim();
@@ -1086,16 +1113,19 @@ void TransformDrawEngine::DoFlush() {
 								glDeleteBuffers(1, &vai->ebo);
 								vai->ebo = 0;
 							}
+							vai->lowAddr = 0xFFFFFFFF;
+							vai->highAddr = 0;
+							for (int i = 0; i < numDrawCalls; i++) {
+								if (vai->lowAddr > drawCalls[i].lowAddr)
+									vai->lowAddr = drawCalls[i].lowAddr;
+								if (vai->highAddr < drawCalls[i].highAddr)
+									vai->highAddr = drawCalls[i].highAddr;
+							}
 							DecodeVerts();
 							goto rotateVBO;
 						}
-						if (vai->numVerts > 100) {
-							// exponential backoff up to 16 draws, then every 24
-							vai->drawsUntilNextFullHash = std::min(24, vai->numFrames);
-						} else {
-							// Lower numbers seem much more likely to change.
-							vai->drawsUntilNextFullHash = 0;
-						}
+						// exponential backoff up to 16 draws, then every 24
+						vai->drawsUntilNextFullHash = std::min(24, vai->numFrames);
 						// TODO: tweak
 						//if (vai->numFrames > 1000) {
 						//	vai->status = VertexArrayInfo::VAI_RELIABLE;
@@ -1106,6 +1136,14 @@ void TransformDrawEngine::DoFlush() {
 					}
 
 					if (vai->vbo == 0) {
+						vai->lowAddr = 0xFFFFFFFF;
+						vai->highAddr = 0;
+						for (int i = 0; i < numDrawCalls; i++) {
+							if (vai->lowAddr > drawCalls[i].lowAddr)
+								vai->lowAddr = drawCalls[i].lowAddr;
+							if (vai->highAddr < drawCalls[i].highAddr)
+								vai->highAddr = drawCalls[i].highAddr;
+						}
 						DecodeVerts();
 						vai->numVerts = indexGen.VertexCount();
 						vai->prim = indexGen.Prim();

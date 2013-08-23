@@ -72,6 +72,8 @@ public:
 	};
 
 	u32 hash;
+	u32 lowAddr;
+	u32 highAddr;
 
 	Status status;
 
@@ -116,6 +118,7 @@ public:
 
 	void DecimateTrackedVertexArrays();
 	void ClearTrackedVertexArrays();
+	void InvalidateTrackedVertexArrays(u32 addr, int size);
 
 	void SetupVertexDecoder(u32 vertType);
 
@@ -152,6 +155,8 @@ private:
 		u16 vertexCount;
 		u16 indexLowerBound;
 		u16 indexUpperBound;
+		u32 lowAddr;
+		u32 highAddr;
 	};
 
 	// Vertex collector state

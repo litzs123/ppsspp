@@ -1149,6 +1149,8 @@ void GLES_GPU::InvalidateCacheInternal(u32 addr, int size, GPUInvalidationType t
 
 	if (type != GPU_INVALIDATE_ALL)
 		framebufferManager_.UpdateFromMemory(addr, size);
+
+	transformDraw_.InvalidateTrackedVertexArrays(addr, size);
 }
 
 void GLES_GPU::UpdateMemory(u32 dest, u32 src, int size) {
