@@ -25,6 +25,8 @@ struct PSPTimeval {
 void __RtcTimeOfDay(PSPTimeval *tv);
 
 void Register_sceRtc();
+void Register_sceRtc_driver();
+
 void __RtcInit();
 void __RtcDoState(PointerWrap &p);
 

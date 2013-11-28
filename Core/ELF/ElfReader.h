@@ -19,7 +19,8 @@
 
 #include "Common/CommonTypes.h"
 
-#include "ElfTypes.h"
+#include "Core/Util/BlockAllocator.h"
+#include "Core/ELF/ElfTypes.h"
 
 enum {
 	R_MIPS_NONE,
@@ -136,7 +137,7 @@ public:
 	}
 
 	// More indepth stuff:)
-	int LoadInto(u32 vaddr);
+	int LoadInto(u32 vaddr, BlockAllocator &memory);
 	bool LoadSymbols();
 	bool LoadRelocations(Elf32_Rel *rels, int numRelocs);
 	void LoadRelocations2(int rel_seg);

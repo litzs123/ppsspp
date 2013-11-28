@@ -92,6 +92,7 @@ public:
 	std::vector<std::string> recentIsos;
 	std::vector<std::string> vPinnedPaths;
 	std::string sLanguageIni;
+	bool bLoadPlugins;
 
 
 	// GFX

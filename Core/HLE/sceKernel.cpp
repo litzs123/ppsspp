@@ -889,6 +889,16 @@ const HLEFunction ThreadManForKernel[] =
 	{0xceadeb47, WrapI_U<ThreadManForKernel_ceadeb47>, "ThreadManForKernel_ceadeb47"},
 	{0x446d8de6, WrapI_CUUIUU<ThreadManForKernel_446d8de6>, "ThreadManForKernel_446d8de6"},//Not sure right
 	{0xf475845d, &WrapI_IIU<ThreadManForKernel_f475845d>, "ThreadManForKernel_f475845d"},//Not sure right
+
+	// TODO: These probably have different behavior from kernel.
+	{0x17c1684e,WrapU_UU<sceKernelReferThreadStatus>,"sceKernelReferThreadStatus"},
+	{0x809ce29b,WrapV_I<sceKernelExitDeleteThread>,"sceKernelExitDeleteThread"},
+	{0x9944f31f,WrapI_I<sceKernelSuspendThread>,"sceKernelSuspendThread"},
+	{0x75156e8f,WrapI_I<sceKernelResumeThread>,"sceKernelResumeThread"},
+	{0xdb738f35,WrapI_U<sceKernelGetSystemTime>,"sceKernelGetSystemTime"},
+	{0x293b45b8,WrapI_V<sceKernelGetThreadId>,"sceKernelGetThreadId"},
+	{0x627E6F3A,WrapI_U<sceKernelReferSystemStatus>,"sceKernelReferSystemStatus"},
+	{0x94416130,WrapU_UUUU<sceKernelGetThreadmanIdList>,"sceKernelGetThreadmanIdList"},
 };
 
 void Register_ThreadManForUser()
@@ -929,13 +939,6 @@ void Register_LoadExecForKernel()
 	RegisterModule("LoadExecForKernel", ARRAY_SIZE(LoadExecForKernel), LoadExecForKernel);
 }
 
-const HLEFunction SysMemForKernel[] =
-{
-	{0x636c953b,0, "SysMemForKernel_636c953b"},
-	{0xc9805775,0, "SysMemForKernel_c9805775"},
-	{0x1c1fbfe7,0, "SysMemForKernel_1c1fbfe7"},
-};
-
 const HLEFunction ExceptionManagerForKernel[] =
 {
 	{0x3FB264FC, 0, "sceKernelRegisterExceptionHandler"},
@@ -947,11 +950,6 @@ const HLEFunction ExceptionManagerForKernel[] =
 	{0x15ADC862, 0, "sceKernelRegisterNmiHandler"},
 	{0xB15357C9, 0, "sceKernelReleaseNmiHandler"},
 };
-
-void Register_SysMemForKernel()
-{
-	RegisterModule("SysMemForKernel", ARRAY_SIZE(SysMemForKernel), SysMemForKernel);
-}
 
 void Register_ExceptionManagerForKernel()
 {

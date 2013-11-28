@@ -294,6 +294,9 @@ static ConfigSetting generalSettings[] = {
 	ConfigSetting("PauseOnLostFocus", &g_Config.bPauseOnLostFocus, false),
 #endif
 	ConfigSetting("DumpDecryptedEboots", &g_Config.bDumpDecryptedEboot, false),
+
+	ReportedConfigSetting("LoadPlugins", &g_Config.bLoadPlugins, false),
+
 	ConfigSetting(false),
 };
 

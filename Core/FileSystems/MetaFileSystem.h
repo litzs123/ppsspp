@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include <string>
 #include "native/base/mutex.h"
 #include "Core/FileSystems/FileSystem.h"
 

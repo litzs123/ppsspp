@@ -326,7 +326,7 @@ void RegisterAllModules() {
 	Register_SysclibForKernel();
 	Register_sceCtrl_driver();
 	Register_sceDisplay_driver();
-
-
+	Register_scePower_driver();
+	Register_sceRtc_driver();
 }
 

@@ -956,3 +956,8 @@ void Register_sceRtc()
 {
 	RegisterModule("sceRtc", ARRAY_SIZE(sceRtc), sceRtc);
 }
+
+void Register_sceRtc_driver()
+{
+	RegisterModule("sceRtc_driver", ARRAY_SIZE(sceRtc), sceRtc);
+}

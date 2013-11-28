@@ -199,6 +199,7 @@
     <ClCompile Include="HDRemaster.cpp" />
     <ClCompile Include="HLE\HLE.cpp" />
     <ClCompile Include="HLE\HLETables.cpp" />
+    <ClCompile Include="HLE\Plugins.cpp" />
     <ClCompile Include="HLE\proAdhoc.cpp" />
     <ClCompile Include="HLE\ReplaceTables.cpp" />
     <ClCompile Include="HLE\sceAtrac.cpp" />
@@ -471,6 +472,7 @@
     <ClInclude Include="HLE\HLE.h" />
     <ClInclude Include="HLE\HLETables.h" />
     <ClInclude Include="HLE\KernelWaitHelpers.h" />
+    <ClInclude Include="HLE\Plugins.h" />
     <ClInclude Include="HLE\proAdhoc.h" />
     <ClInclude Include="HLE\ReplaceTables.h" />
     <ClInclude Include="HLE\sceAtrac.h" />

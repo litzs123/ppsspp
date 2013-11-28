@@ -2142,8 +2142,48 @@ const HLEFunction SysMemUserForUser[] = {
 	{0xD8DE5C1E,WrapU_V<SysMemUserForUser_D8DE5C1E>,"SysMemUserForUser_D8DE5C1E"},
 };
 
-
 void Register_SysMemUserForUser()
 {
 	RegisterModule("SysMemUserForUser", ARRAY_SIZE(SysMemUserForUser), SysMemUserForUser);
+}
+
+const HLEFunction SysMemUserForKernel[] = {
+	{0x636c953b,0, "SysMemForKernel_636c953b"},
+	{0xc9805775,0, "SysMemForKernel_c9805775"},
+	{0x1c1fbfe7,0, "SysMemForKernel_1c1fbfe7"},
+	{0xA291F107,WrapU_V<sceKernelMaxFreeMemSize>,"sceKernelMaxFreeMemSize"},
+	{0xF919F628,WrapU_V<sceKernelTotalFreeMemSize>,"sceKernelTotalFreeMemSize"},
+	{0x3FC9AE6A,WrapU_V<sceKernelDevkitVersion>,"sceKernelDevkitVersion"},
+	{0x237DBD4F,WrapI_ICIUU<sceKernelAllocPartitionMemory>,"sceKernelAllocPartitionMemory"},	//(int size) ?
+	{0xB6D61D02,WrapI_I<sceKernelFreePartitionMemory>,"sceKernelFreePartitionMemory"},	 //(void *ptr) ?
+	{0x9D9A5BA1,WrapU_I<sceKernelGetBlockHeadAddr>,"sceKernelGetBlockHeadAddr"},			//(void *ptr) ?
+	{0x13a5abef,WrapI_C<sceKernelPrintf>,"sceKernelPrintf"},
+	{0x7591c7db,&WrapI_I<sceKernelSetCompiledSdkVersion>,"sceKernelSetCompiledSdkVersion"},
+	{0x342061E5,&WrapI_I<sceKernelSetCompiledSdkVersion370>,"sceKernelSetCompiledSdkVersion370"},
+	{0x315AD3A0,&WrapI_I<sceKernelSetCompiledSdkVersion380_390>,"sceKernelSetCompiledSdkVersion380_390"},
+	{0xEBD5C3E6,&WrapI_I<sceKernelSetCompiledSdkVersion395>,"sceKernelSetCompiledSdkVersion395"},
+	{0x057E7380,&WrapI_I<sceKernelSetCompiledSdkVersion401_402>,"sceKernelSetCompiledSdkVersion401_402"},
+	{0xf77d77cb,&WrapI_I<sceKernelSetCompilerVersion>,"sceKernelSetCompilerVersion"},
+	{0x91de343c,&WrapI_I<sceKernelSetCompiledSdkVersion500_505>,"sceKernelSetCompiledSdkVersion500_505"},
+	{0x7893f79a,&WrapI_I<sceKernelSetCompiledSdkVersion507>,"sceKernelSetCompiledSdkVersion507"},
+	{0x35669d4c,&WrapI_I<sceKernelSetCompiledSdkVersion600_602>,"sceKernelSetCompiledSdkVersion600_602"},  //??
+	{0x1b4217bc,&WrapI_I<sceKernelSetCompiledSdkVersion603_605>,"sceKernelSetCompiledSdkVersion603_605"},
+	{0x358ca1bb,&WrapI_I<sceKernelSetCompiledSdkVersion606>,"sceKernelSetCompiledSdkVersion606"},
+	{0xfc114573,&WrapI_V<sceKernelGetCompiledSdkVersion>,"sceKernelGetCompiledSdkVersion"},
+	{0x2a3e5280,0,"sceKernelQueryMemoryInfo"},
+	{0xacbd88ca,0,"SysMemUserForUser_ACBD88CA"},
+	{0x945e45da,0,"SysMemUserForUser_945E45DA"},
+	{0xa6848df8,0,"sceKernelSetUsersystemLibWork"},
+	{0x6231a71d,0,"sceKernelSetPTRIG"},
+	{0x39f49610,0,"sceKernelGetPTRIG"},
+	// Obscure raw block API
+	{0xDB83A952,WrapU_UU<GetMemoryBlockPtr>,"SysMemUserForUser_DB83A952"},  // GetMemoryBlockAddr
+	{0x50F61D8A,WrapU_U<FreeMemoryBlock>,"SysMemUserForUser_50F61D8A"},  // FreeMemoryBlock
+	{0xFE707FDF,WrapU_CUUU<AllocMemoryBlock>,"SysMemUserForUser_FE707FDF"},  // AllocMemoryBlock
+	{0xD8DE5C1E,WrapU_V<SysMemUserForUser_D8DE5C1E>,"SysMemUserForUser_D8DE5C1E"},
+};
+
+void Register_SysMemForKernel()
+{
+	RegisterModule("SysMemForKernel", ARRAY_SIZE(SysMemUserForKernel), SysMemUserForKernel);
 }

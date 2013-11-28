@@ -1,4 +1,4 @@
-// Copyright (c) 2012- PPSSPP Project.
+// Copyright (c) 2013- PPSSPP Project.
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,22 +15,8 @@
 // Official git repository and contact information can be found at
 // https://github.com/hrydgard/ppsspp and http://www.ppsspp.org/.
 
-#pragma once
+#include "Common/Common.h"
 
-#include "sceKernel.h"
-#include "HLE.h"
-
-struct SceKernelSMOption;
-
-KernelObject *__KernelModuleObject();
-void __KernelModuleDoState(PointerWrap &p);
-void __KernelModuleShutdown();
-
-u32 __KernelGetModuleGP(SceUID module);
-SceUID __KernelLoadModule(const std::string &filename, bool kernelMode, std::string *error_string);
-int __KernelStartModule(SceUID moduleId, u32 argsize, u32 argAddr, u32 returnValueAddr, SceKernelSMOption *smoption, bool *needsWait);
-bool __KernelLoadExec(const char *filename, u32 paramPtr, std::string *error_string);
-void __KernelReturnFromModuleFunc();
-
-void Register_ModuleMgrForUser();
-void Register_ModuleMgrForKernel();
+namespace HLEPlugins {
+	void Init();
+};
