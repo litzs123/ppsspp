@@ -49,12 +49,6 @@ u32 sceMp4GetMovieInfo()
 	return 0;
 }
 
-u32 sceMp4CreatesceMp4GetNumberOfMetaData()
-{
-	ERROR_LOG(ME, "UNIMPL sceMp4GetNumberOfMetaData()");
-	return 0;
-}
-
 u32 sceMp4Delete()
 {
 	ERROR_LOG(ME, "UNIMPL sceMp4Delete()");
