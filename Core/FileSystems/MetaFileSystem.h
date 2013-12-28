@@ -89,7 +89,9 @@ public:
 	u32      OpenWithError(int &error, std::string filename, FileAccess access, const char *devicename = NULL);
 	void     CloseFile(u32 handle);
 	size_t   ReadFile(u32 handle, u8 *pointer, s64 size);
+	size_t   ReadFile(u32 handle, u8 *pointer, s64 size, int &usec);
 	size_t   WriteFile(u32 handle, const u8 *pointer, s64 size);
+	size_t   WriteFile(u32 handle, const u8 *pointer, s64 size, int &usec);
 	size_t   SeekFile(u32 handle, s32 position, FileMove type);
 	PSPFileInfo GetFileInfo(std::string filename);
 	bool     OwnsHandle(u32 handle) {return false;}
