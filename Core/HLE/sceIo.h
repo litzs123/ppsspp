@@ -36,4 +36,6 @@ KernelObject *__KernelFileNodeObject();
 KernelObject *__KernelDirListingObject();
 
 void Register_IoFileMgrForUser();
+void Register_IoFileMgrForKernel();
 void Register_StdioForUser();
+void Register_StdioForKernel();
