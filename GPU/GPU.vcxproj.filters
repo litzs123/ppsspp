@@ -162,6 +162,9 @@
     <ClInclude Include="Common\TextureDecoderNEON.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="GLES\DisplayListCache.h">
+      <Filter>GLES</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math3D.cpp">
@@ -300,6 +303,15 @@
       <Filter>GLES</Filter>
     </ClCompile>
     <ClCompile Include="GLES\VertexDecoderX86.cpp">
+      <Filter>GLES</Filter>
+    </ClCompile>
+    <ClCompile Include="GLES\DisplayListCache.cpp">
+      <Filter>GLES</Filter>
+    </ClCompile>
+    <ClCompile Include="GLES\DisplayListCacheX86.cpp">
+      <Filter>GLES</Filter>
+    </ClCompile>
+    <ClCompile Include="GLES\DisplayListCacheArm.cpp">
       <Filter>GLES</Filter>
     </ClCompile>
   </ItemGroup>

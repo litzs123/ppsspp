@@ -29,6 +29,7 @@
 
 class ShaderManager;
 class LinkedShader;
+class DisplayListCache;
 
 class GLES_GPU : public GPUCommon {
 public:
@@ -91,11 +92,13 @@ private:
 	void BeginFrameInternal();
 	void CopyDisplayToOutputInternal();
 	void InvalidateCacheInternal(u32 addr, int size, GPUInvalidationType type);
+	inline bool TryEnterJit(DisplayList &list);
 
 	FramebufferManager framebufferManager_;
 	TextureCache textureCache_;
 	TransformDrawEngine transformDraw_;
 	ShaderManager *shaderManager_;
+	DisplayListCache *jitCache_;
 
 	u8 *commandFlags_;
 
@@ -104,4 +107,6 @@ private:
 
 	std::string reportingPrimaryInfo_;
 	std::string reportingFullInfo_;
+
+	friend class DisplayListCache;
 };

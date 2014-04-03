@@ -44,6 +44,7 @@ ARCH_FILES := \
   $(SRC)/Core/MIPS/x86/Jit.cpp \
   $(SRC)/Core/MIPS/x86/RegCache.cpp \
   $(SRC)/Core/MIPS/x86/RegCacheFPU.cpp \
+  $(SRC)/GPU/GLES/DisplayListCacheX86.cpp \
   $(SRC)/GPU/GLES/VertexDecoderX86.cpp
 endif
 
@@ -63,7 +64,8 @@ ARCH_FILES := \
   $(SRC)/Core/MIPS/ARM/ArmAsm.cpp \
   $(SRC)/Core/MIPS/ARM/ArmJit.cpp \
   $(SRC)/Core/MIPS/ARM/ArmRegCache.cpp \
-  $(SRC)/Core/MIPS/ARM/ArmRegCacheFPU.cpp \
+  $(SRC)/Core/MIPS/ARM/ArmRegCacheFPU.cpp  \
+  $(SRC)/GPU/GLES/DisplayListCacheArm.cpp \
   $(SRC)/GPU/GLES/VertexDecoderArm.cpp \
   ArmEmitterTest.cpp
 endif
@@ -84,6 +86,7 @@ ARCH_FILES := \
   $(SRC)/Core/MIPS/ARM/ArmJit.cpp \
   $(SRC)/Core/MIPS/ARM/ArmRegCache.cpp \
   $(SRC)/Core/MIPS/ARM/ArmRegCacheFPU.cpp \
+  $(SRC)/GPU/GLES/DisplayListCacheArm.cpp \
   $(SRC)/GPU/GLES/VertexDecoderArm.cpp \
   ArmEmitterTest.cpp
 endif
@@ -138,6 +141,7 @@ EXEC_AND_LIB_FILES := \
   $(SRC)/GPU/Common/PostShader.cpp \
   $(SRC)/GPU/Debugger/Breakpoints.cpp \
   $(SRC)/GPU/Debugger/Stepping.cpp \
+  $(SRC)/GPU/GLES/DisplayListCache.cpp \
   $(SRC)/GPU/GLES/Framebuffer.cpp \
   $(SRC)/GPU/GLES/GLES_GPU.cpp.arm \
   $(SRC)/GPU/GLES/TextureCache.cpp.arm \
