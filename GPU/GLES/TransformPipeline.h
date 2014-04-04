@@ -29,6 +29,7 @@ class LinkedShader;
 class ShaderManager;
 class TextureCache;
 class FramebufferManager;
+class DisplayListCache;
 struct TransformedVertex;
 
 struct DecVtxFormat;
@@ -242,6 +243,8 @@ private:
 	u32 dcid_;
 
 	UVScale *uvScale;
+
+	friend class DisplayListCache;
 };
 
 // Only used by SW transform
