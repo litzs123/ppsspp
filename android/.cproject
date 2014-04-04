@@ -130,5 +130,7 @@
 		<configuration configurationName="Default">
 			<resource resourceType="PROJECT" workspacePath="/ppsspp"/>
 		</configuration>
+		<configuration configurationName="armv7profiler"/>
+		<configuration configurationName="armv7debug"/>
 	</storageModule>
 </cproject>
